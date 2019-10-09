@@ -88,12 +88,8 @@ isFilled = not
 
 -- Function returns true if an element is Empty within a list
 hasBlankElement :: [Maybe Int] -> Bool
-hasBlankElement [x] = isBlankElement x
-hasBlankElement (x:xs) = isBlankElement x || hasBlankElement xs
-
-isBlankElement :: Maybe Int -> Bool
-isBlankElement Nothing = True
-isBlankElement _ = False
+hasBlankElement = foldr (or . isNothing) False
+  where or = (||)
 
 -- B1
 -- Given a Sudoku, print each row seperated by new line characters.
@@ -220,7 +216,7 @@ blanks' [x] n = blanksInRow x n
 blanks' (x:xs) n = blanksInRow x n ++ blanks' xs (n+1)
 
 blanksInRow :: [Maybe Int] -> Int -> [Pos]
-blanksInRow row index = [(index, n) | n <- [0..8], isBlankElement (row !! n)]
+blanksInRow row index = [(index, n) | n <- [0..8], isNothing (row !! n)]
 
 -- Property for blanks
 prop_blanks_allBlank :: Sudoku -> Bool
